@@ -48,15 +48,15 @@ namespace SomeShop.DataAccess.InMemory
         public Product Find(string id)
         {
             Product p0 = products.Find(t => t.Id == id);
-
-            if (p0 != null)
-            {
-                return p0; 
-            }
-            else
-            {
-                throw new System.Exception("Product not found");
-            }
+            return p0;
+            //if (p0 != null)
+            //{
+                
+            //}
+            //else
+            //{
+            //    throw new System.Exception("Product not found");
+            //}
         }
 
         public IQueryable<Product> Collection()
