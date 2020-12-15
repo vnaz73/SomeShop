@@ -1,4 +1,5 @@
 ﻿using SomeShop.Core.Models;
+using SomeShop.Core.ViewModels;
 using SomeShop.DataAccess.InMemory;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,11 @@ namespace SomeShop.WebUI.Controllers
     public class ProductManagerController : Controller
     {
         ProductRepository context;
+        ProductCategoryRepository productCategoryContext;
         public ProductManagerController()
         {
             context = new ProductRepository();
+            productCategoryContext = new ProductCategoryRepository();
         }
         // GET: Product
         public ActionResult Index()
@@ -21,15 +24,18 @@ namespace SomeShop.WebUI.Controllers
         }
         public ActionResult Create()
         {
-            Product p = new Product();
-            return View(p);
+            ProductManagerViewModel vm = new ProductManagerViewModel();
+
+            vm.Product = new Product();
+            vm.ProductCategories = productCategoryContext.Collection();
+            return View(vm);
         }
         [HttpPost]
-        public ActionResult Create(Product p)
+        public ActionResult Create(ProductManagerViewModel vm)
         {
-            if (!ModelState.IsValid) return View(p);
+            if (!ModelState.IsValid) return View(vm);
 
-            context.Insert(p);
+            context.Insert(vm.Product);
             context.Commit();
 
             return RedirectToAction("Index");
@@ -41,23 +47,26 @@ namespace SomeShop.WebUI.Controllers
             Product p0 = context.Find(id);
             if (p0 == null) return HttpNotFound();
 
+            ProductManagerViewModel vm = new ProductManagerViewModel();
 
-            return View(p0);
+            vm.Product = p0;
+            vm.ProductCategories = productCategoryContext.Collection();
+            return View(vm);
         }
 
         [HttpPost]
-        public ActionResult Edit(Product p, string id)
+        public ActionResult Edit(ProductManagerViewModel vm, string id)
         {
-            if (!ModelState.IsValid) return View(p);
+            if (!ModelState.IsValid) return View(vm);
 
             Product p0 = context.Find(id);
             if (p0 == null) return HttpNotFound();
 
-            p0.Name = p.Name;
-            p0.Description = p.Description;
-            p0.Image = p.Image;
-            p0.Category = p.Category;
-            p0.Price = p.Price;
+            p0.Name = vm.Product.Name;
+            p0.Description = vm.Product.Description;
+            p0.Image = vm.Product.Image;
+            p0.Category = vm.Product.Category;
+            p0.Price = vm.Product.Price;
 
             context.Commit();
 
