@@ -1,11 +1,12 @@
-﻿using SomeShop.Core.Models;
+﻿using SomeShop.Core.Contracts;
+using SomeShop.Core.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Caching;
 
 namespace SomeShop.DataAccess.InMemory
 {
-    public class InMemoryRepository<T> where T: BaseEntity
+    public class InMemoryRepository<T> : IRepository<T> where T : BaseEntity
     {
         ObjectCache cache = MemoryCache.Default;
         List<T> items;
@@ -43,7 +44,7 @@ namespace SomeShop.DataAccess.InMemory
             }
             else
             {
-                throw new System.Exception(className  + " not found");
+                throw new System.Exception(className + " not found");
             }
         }
 

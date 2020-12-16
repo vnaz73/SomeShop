@@ -1,5 +1,5 @@
-﻿using SomeShop.Core.Models;
-using SomeShop.DataAccess.InMemory;
+﻿using SomeShop.Core.Contracts;
+using SomeShop.Core.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -8,10 +8,10 @@ namespace SomeShop.WebUI.Controllers
 {
     public class ProductCategoryManagerController : Controller
     {
-        InMemoryRepository<ProductCategory> context;
-        public ProductCategoryManagerController()
+        IRepository<ProductCategory> context;
+        public ProductCategoryManagerController(IRepository<ProductCategory> Productcontext)
         {
-            context = new InMemoryRepository<ProductCategory>();
+            context = Productcontext;
         }
         // GET: Product
         public ActionResult Index()
