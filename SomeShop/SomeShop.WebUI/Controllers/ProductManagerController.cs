@@ -2,7 +2,9 @@
 using SomeShop.Core.Models;
 using SomeShop.Core.ViewModels;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 
 namespace SomeShop.WebUI.Controllers
@@ -31,9 +33,15 @@ namespace SomeShop.WebUI.Controllers
             return View(vm);
         }
         [HttpPost]
-        public ActionResult Create(ProductManagerViewModel vm)
+        public ActionResult Create(ProductManagerViewModel vm, HttpPostedFileBase file)
         {
             if (!ModelState.IsValid) return View(vm);
+
+            if(file != null)
+            {
+                vm.Product.Image = vm.Product.Id + Path.GetExtension(file.FileName);
+                file.SaveAs(Server.MapPath("//Content//ProductImges//") + vm.Product.Image);
+            }
 
             context.Insert(vm.Product);
             context.Commit();
@@ -55,12 +63,18 @@ namespace SomeShop.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(ProductManagerViewModel vm, string id)
+        public ActionResult Edit(ProductManagerViewModel vm, string id, HttpPostedFileBase file)
         {
             if (!ModelState.IsValid) return View(vm);
 
             Product p0 = context.Find(id);
             if (p0 == null) return HttpNotFound();
+
+            if (file != null)
+            {
+                vm.Product.Image = vm.Product.Id + Path.GetExtension(file.FileName);
+                file.SaveAs(Server.MapPath("//Content//ProductImages//") + vm.Product.Image);
+            }
 
             p0.Name = vm.Product.Name;
             p0.Description = vm.Product.Description;
