@@ -1,22 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SomeShop.WebUI;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SomeShop.Core.Contracts;
+using SomeShop.Core.Models;
 using SomeShop.WebUI.Controllers;
+using System.Web.Mvc;
 
 namespace SomeShop.WebUI.Tests.Controllers
 {
     [TestClass]
     public class HomeControllerTest
     {
+        private readonly IRepository<ProductCategory> ProductCategoryContext;
+        private readonly IRepository<Product> Productcontext;
+
         [TestMethod]
         public void Index()
         {
             // Arrange
-            HomeController controller = new HomeController();
+            HomeController controller = new HomeController(Productcontext, ProductCategoryContext);
 
             // Act
             ViewResult result = controller.Index() as ViewResult;
@@ -29,7 +29,7 @@ namespace SomeShop.WebUI.Tests.Controllers
         public void About()
         {
             // Arrange
-            HomeController controller = new HomeController();
+            HomeController controller = new HomeController(Productcontext, ProductCategoryContext);
 
             // Act
             ViewResult result = controller.About() as ViewResult;
@@ -42,7 +42,7 @@ namespace SomeShop.WebUI.Tests.Controllers
         public void Contact()
         {
             // Arrange
-            HomeController controller = new HomeController();
+            HomeController controller = new HomeController(Productcontext, ProductCategoryContext);
 
             // Act
             ViewResult result = controller.Contact() as ViewResult;
