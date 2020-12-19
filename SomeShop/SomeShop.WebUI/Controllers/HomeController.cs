@@ -1,6 +1,6 @@
 ﻿using SomeShop.Core.Contracts;
 using SomeShop.Core.Models;
-using System.Collections.Generic;
+using SomeShop.Core.ViewModels;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -15,10 +15,15 @@ namespace SomeShop.WebUI.Controllers
             context = Productcontext;
             productCategoryContext = ProductCategoryContext;
         }
-        public ActionResult Index()
+        public ActionResult Index(string Category=null)
         {
-            List<Product> p = context.Collection().ToList();
-            return View(p);
+            ProductListViewModel vm = new ProductListViewModel();
+            vm.ProductCategories = productCategoryContext.Collection().ToList();
+
+
+            vm.Product =Category == null? context.Collection().ToList() :
+                context.Collection().Where(p => p.Category == Category).ToList();
+            return View(vm);
         }
 
         public ActionResult Details(string id)
