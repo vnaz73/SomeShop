@@ -22,24 +22,34 @@ namespace SomeShop.Services
         private Basket GetBasket(HttpContextBase httpContext, bool createIfNull)
         {
             HttpCookie cookie = httpContext.Request.Cookies.Get(BasketSessionName);
+
             Basket basket = new Basket();
 
             if (cookie != null)
             {
-                var basketId = cookie.Value;
+                string basketId = cookie.Value;
                 if (!string.IsNullOrEmpty(basketId))
                 {
                     basket = basketContext.Find(basketId);
-
                 }
-
+                else
+                {
+                    if (createIfNull)
+                    {
+                        basket = CreateBasket(httpContext);
+                    }
+                }
             }
-            if (basket == null && createIfNull)
+            else
             {
-                basket = CreateBasket(httpContext);
-
+                if (createIfNull)
+                {
+                    basket = CreateBasket(httpContext);
+                }
             }
+
             return basket;
+
         }
 
         private Basket CreateBasket(HttpContextBase httpContext)
@@ -48,7 +58,7 @@ namespace SomeShop.Services
             basketContext.Insert(basket);
             basketContext.Commit();
 
-            HttpCookie cookie = httpContext.Request.Cookies.Get(BasketSessionName);
+            HttpCookie cookie = new HttpCookie(BasketSessionName);
             cookie.Value = basket.Id;
             cookie.Expires = DateTime.Now.AddDays(1);
             httpContext.Response.Cookies.Add(cookie);
@@ -69,6 +79,8 @@ namespace SomeShop.Services
                 item.BasketId = basket.Id;
                 item.productId = productId;
                 item.Quantity = 1;
+
+                basket.BasketItems.Add(item);
             }
             else
             {
