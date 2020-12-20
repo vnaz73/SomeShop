@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SomeShop.Core", "SomeShop.Core\SomeShop.Core.csproj", "{EF6C5EC9-70B0-46EA-A8A1-7E22A6824037}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SomeShop.Services", "SomeShop.Services\SomeShop.Services.csproj", "{B7367E09-1923-4FD9-B9B5-A5429599B589}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EF6C5EC9-70B0-46EA-A8A1-7E22A6824037} = {EF6C5EC9-70B0-46EA-A8A1-7E22A6824037}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SomeShop.DataAccess.SQL", "SomeShop.DataAccess.SQL\SomeShop.DataAccess.SQL.csproj", "{F989CC95-442F-487C-ACD7-9D7B9CB26AB1}"
 EndProject
