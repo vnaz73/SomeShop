@@ -79,6 +79,18 @@ namespace SomeShop.WebUI.Models
         [Display(Name = "Подтверждение пароля")]
         [Compare("Password", ErrorMessage = "Пароль и его подтверждение не совпадают.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        public string FirstName { get; set; }
+        [Required]
+        public string LastName { get; set; }
+        [Required]
+        public string Street { get; set; }
+        [Required]
+        public string City { get; set; }
+        public string State { get; set; }
+        [Required]
+        public string ZipCode { get; set; }
     }
 
     public class ResetPasswordViewModel

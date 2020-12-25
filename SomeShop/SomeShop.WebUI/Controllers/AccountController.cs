@@ -1,14 +1,13 @@
-﻿using System;
-using System.Globalization;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using SomeShop.Core.Contracts;
+using SomeShop.Core.Models;
+using SomeShop.WebUI.Models;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using SomeShop.WebUI.Models;
 
 namespace SomeShop.WebUI.Controllers
 {
@@ -18,14 +17,13 @@ namespace SomeShop.WebUI.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
-        public AccountController()
-        {
-        }
+  
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(
+            IRepository<Customer> customerRepository)
         {
-            UserManager = userManager;
-            SignInManager = signInManager;
+            
+            this.customerRepository = customerRepository;
         }
 
         public ApplicationSignInManager SignInManager
@@ -155,6 +153,22 @@ namespace SomeShop.WebUI.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    //register the customer model
+                    Customer customer = new Customer()
+                    {
+                        City = model.City,
+                        Email = model.Email,
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        State = model.State,
+                        Street = model.Street,
+                        ZipCode = model.ZipCode,
+                        UserId = user.Id
+                    };
+
+                    customerRepository.Insert(customer);
+                    customerRepository.Commit();
+
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
                     // Дополнительные сведения о включении подтверждения учетной записи и сброса пароля см. на странице https://go.microsoft.com/fwlink/?LinkID=320771.
@@ -426,6 +440,7 @@ namespace SomeShop.WebUI.Controllers
         #region Вспомогательные приложения
         // Используется для защиты от XSRF-атак при добавлении внешних имен входа
         private const string XsrfKey = "XsrfId";
+        private readonly IRepository<Customer> customerRepository;
 
         private IAuthenticationManager AuthenticationManager
         {
