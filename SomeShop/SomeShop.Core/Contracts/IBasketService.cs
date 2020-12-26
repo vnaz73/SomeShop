@@ -10,5 +10,7 @@ namespace SomeShop.Services
         IEnumerable<BasketItemViewModel> GetBasketItems(HttpContextBase httpContext);
         BasketSummaryViewModel GetBasketSummary(HttpContextBase httpContext);
         void RemoveFromBasket(HttpContextBase httpContext, string productId);
+        void ClearBasket(HttpContextBase httpContext);
+        
     }
 }
