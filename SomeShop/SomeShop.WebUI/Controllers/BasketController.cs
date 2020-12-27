@@ -1,6 +1,7 @@
 ﻿using SomeShop.Core.Contracts;
 using SomeShop.Core.Models;
 using SomeShop.Services;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace SomeShop.WebUI.Controllers
@@ -9,11 +10,16 @@ namespace SomeShop.WebUI.Controllers
     {
         private readonly IBasketService basketService;
         private readonly IOrderService orderService;
+        private readonly IRepository<Customer> customers;
 
-        public BasketController(IBasketService basketService, IOrderService orderService)
+        public BasketController(IBasketService basketService,
+                                IOrderService orderService,
+                                IRepository<Customer> customers
+                                )
         {
             this.basketService = basketService;
             this.orderService = orderService;
+            this.customers = customers;
         }
         // GET: Basket
         public ActionResult Index()
@@ -43,29 +49,29 @@ namespace SomeShop.WebUI.Controllers
         public ActionResult Checkout()
         {
 
-            return View();
+           
 
-            //Customer customer = customers.Collection().FirstOrDefault(c => c.Email == User.Identity.Name);
+            Customer customer = customers.Collection().FirstOrDefault(c => c.Email == User.Identity.Name);
 
-            //if (customer != null)
-            //{
-            //    Order order = new Order()
-            //    {
-            //        Email = customer.Email,
-            //        City = customer.City,
-            //        State = customer.State,
-            //        Street = customer.Street,
-            //        FirstName = customer.FirstName,
-            //        Surname = customer.LastName,
-            //        ZipCode = customer.ZipCode
-            //    };
+            if (customer != null)
+            {
+                Order order = new Order()
+                {
+                    Email = customer.Email,
+                    City = customer.City,
+                    State = customer.State,
+                    Street = customer.Street,
+                    FirstName = customer.FirstName,
+                    Surname = customer.LastName,
+                    ZipCode = customer.ZipCode
+                };
 
-            //    return View(order);
-            //}
-            //else
-            //{
-            //    return RedirectToAction("Error");
-            //}
+                return View(order);
+            }
+            else
+            {
+                return RedirectToAction("Error");
+            }
 
         }
 
